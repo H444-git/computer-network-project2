@@ -64,7 +64,7 @@
 | `.github/workflows/tests.yml`       | 推送到 GitHub 后自动运行端到端测试                       |
 | `deploy/`                           | VPS、树莓派/OpenWrt 部署文档与 systemd 单元              |
 | `docs/`                             | 界面截图                                                 |
-| `gateway_actions.log`               | 网关操作日志（请求号、动作、结果）                       |
+| `gateway_actions.log`               | 运行时自动生成（不入库），记录请求号、动作、结果         |
 
 ## 快速开始
 
