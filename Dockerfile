@@ -7,7 +7,7 @@ COPY web ./web
 
 ENV PYTHONUNBUFFERED=1 \
     WEB_BIND=0.0.0.0 \
-    WEB_PORT=8080 \
+    PORT=8080 \
     WEB_TOKEN=parent123 \
     RELAY_BIND=127.0.0.1 \
     RELAY_HOST=127.0.0.1 \
