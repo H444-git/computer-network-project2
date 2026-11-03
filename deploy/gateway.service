@@ -1,0 +1,19 @@
+[Unit]
+Description=Humiao family gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/humiao
+Environment=RELAY_HOST=203.0.113.10
+Environment=RELAY_PORT=9000
+Environment=DEVICE_ID=child-gw
+Environment=USE_REAL_IPTABLES=1
+ExecStart=/usr/bin/python3 -u gateway.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

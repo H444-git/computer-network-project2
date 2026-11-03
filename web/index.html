@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F2EBDD">
+  <title>护苗 · 家庭网关控制台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23B94A2B'/%3E%3Cpath d='M20 22h24M32 14v36M22 32h20M24 44h16' stroke='%23F8F1E4' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="login" id="login">
+    <div class="login-card">
+      <span class="seal big" aria-hidden="true">护</span>
+      <h2>家长令牌</h2>
+      <p>输入访问令牌，进入家庭网关控制台。</p>
+      <form id="loginForm" autocomplete="off">
+        <label for="tokenInput">访问令牌</label>
+        <input id="tokenInput" type="password" placeholder="••••••" required>
+        <button class="btn primary" type="submit">进入控制台</button>
+      </form>
+      <p class="hint" id="loginHint">默认令牌 parent123，可用 WEB_TOKEN 环境变量修改。</p>
+    </div>
+  </div>
+
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand">
+        <span class="seal" aria-hidden="true">护</span>
+        <div class="brand-text">
+          <h1>护苗 · 网关</h1>
+          <p>跨内网的家长控制台</p>
+        </div>
+      </div>
+      <div class="live" id="live" data-state="connecting" title="实时连接状态">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span id="liveText">连接中</span>
+      </div>
+    </header>
+
+    <main class="board">
+      <section class="card nodes reveal" style="--i:0">
+        <div class="card-head">
+          <span class="index">01</span>
+          <h2>受控网关</h2>
+          <span class="meta" id="deviceCount">0 台在线</span>
+        </div>
+        <div class="device-list" id="deviceList"></div>
+        <p class="hint">网关运行在路由器或主机上，主动连接公网中转，因此家庭宽带无需公网 IP。</p>
+      </section>
+
+      <section class="card control reveal" style="--i:1">
+        <div class="card-head">
+          <span class="index">02</span>
+          <h2>网站管控</h2>
+          <span class="tag" id="modeTag" hidden></span>
+        </div>
+        <form id="cmdForm" autocomplete="off">
+          <label for="target">网址或 IP 地址</label>
+          <input id="target" name="target" type="text" inputmode="url"
+                 placeholder="douyin.com 或 1.2.3.4" required>
+          <div class="actions">
+            <button type="submit" class="btn primary" id="blockBtn">立即阻断</button>
+            <button type="button" class="btn ghost" id="unblockBtn">解除阻断</button>
+          </div>
+        </form>
+        <div class="notice">阻断由家庭网关执行。本机演示为模拟模式，部署到路由器后通过 iptables 生效。</div>
+      </section>
+
+      <section class="card list-card reveal" style="--i:2">
+        <div class="card-head">
+          <span class="index">03</span>
+          <h2>管制清单</h2>
+          <span class="meta" id="blockedCount">0 项</span>
+        </div>
+        <ul class="blocked" id="blockedList"></ul>
+        <div class="empty" id="blockedEmpty">
+          <span class="empty-mark" aria-hidden="true">静</span>
+          <p>当前没有受限网站</p>
+        </div>
+      </section>
+
+      <section class="card ledger reveal" style="--i:3">
+        <div class="card-head">
+          <span class="index">04</span>
+          <h2>执行记录</h2>
+        </div>
+        <ol class="history" id="history"></ol>
+        <div class="empty" id="historyEmpty">
+          <p>还没有执行记录</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span class="foot-tech">relay · gateway · parent</span>
+      <button class="link" id="logout" type="button">退出登录</button>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

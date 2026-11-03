@@ -1,0 +1,8 @@
+services:
+  humiao:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      WEB_TOKEN: parent123
+    restart: unless-stopped

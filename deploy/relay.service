@@ -1,0 +1,20 @@
+[Unit]
+Description=Humiao relay server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=humiao
+WorkingDirectory=/opt/humiao
+Environment=RELAY_BIND=0.0.0.0
+Environment=RELAY_PORT=9000
+Environment=WEB_BIND=0.0.0.0
+Environment=WEB_PORT=8080
+Environment=WEB_TOKEN=parent123
+ExecStart=/usr/bin/python3 -u relay.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
