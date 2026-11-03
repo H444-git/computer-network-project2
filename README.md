@@ -6,8 +6,8 @@
 
 ![桌面控制台](docs/screenshot-desktop.png)
 
-| 手机控制台 | 令牌登录 |
-| --- | --- |
+| 手机控制台                                | 令牌登录                             |
+| ----------------------------------------- | ------------------------------------ |
 | ![手机控制台](docs/screenshot-mobile.png) | ![登录页](docs/screenshot-login.png) |
 
 ## 项目功能
@@ -46,25 +46,25 @@
 
 ## 文件说明
 
-| 文件 | 作用 |
-| --- | --- |
-| `common.py` | 三端共用配置、JSON 行收发、IP/域名校验、局域网地址枚举 |
-| `hub.py` | 中转共享状态：在线设备、待回执请求、历史记录、广播与路由 |
-| `relay.py` | 中转 TCP 服务 + 启动网页控制台 |
-| `webconsole.py` | 纯 asyncio HTTP/SSE 服务、令牌认证、静态文件托管 |
-| `web/index.html` | 手机优先的控制台页面 |
-| `web/style.css` | 「家书 · 守护」暖纸/墨绿/朱砂视觉样式 |
-| `web/app.js` | 登录、状态渲染、指令下发、SSE 实时更新 |
-| `gateway.py` | 家庭网关：心跳、域名解析、模拟 / 真实 iptables 规则 |
-| `parent.py` | 命令行家长端 |
-| `demo_online.py` | 单进程演示入口：中转 + 模拟网关 + 网页控制台 |
-| `Dockerfile` / `docker-compose.yml` | 一条命令容器化运行 |
-| `test_e2e.py` | 端到端测试（自动拉起中转、网关、网页客户端） |
-| `run_demo.bat` | Windows 一键启动三个窗口的演示 |
-| `.github/workflows/tests.yml` | 推送到 GitHub 后自动运行端到端测试 |
-| `deploy/` | VPS、树莓派/OpenWrt 部署文档与 systemd 单元 |
-| `docs/` | 界面截图 |
-| `gateway_actions.log` | 网关操作日志（请求号、动作、结果） |
+| 文件                                | 作用                                                     |
+| ----------------------------------- | -------------------------------------------------------- |
+| `common.py`                         | 三端共用配置、JSON 行收发、IP/域名校验、局域网地址枚举   |
+| `hub.py`                            | 中转共享状态：在线设备、待回执请求、历史记录、广播与路由 |
+| `relay.py`                          | 中转 TCP 服务 + 启动网页控制台                           |
+| `webconsole.py`                     | 纯 asyncio HTTP/SSE 服务、令牌认证、静态文件托管         |
+| `web/index.html`                    | 手机优先的控制台页面                                     |
+| `web/style.css`                     | 「家书 · 守护」暖纸/墨绿/朱砂视觉样式                    |
+| `web/app.js`                        | 登录、状态渲染、指令下发、SSE 实时更新                   |
+| `gateway.py`                        | 家庭网关：心跳、域名解析、模拟 / 真实 iptables 规则      |
+| `parent.py`                         | 命令行家长端                                             |
+| `demo_online.py`                    | 单进程演示入口：中转 + 模拟网关 + 网页控制台             |
+| `Dockerfile` / `docker-compose.yml` | 一条命令容器化运行                                       |
+| `test_e2e.py`                       | 端到端测试（自动拉起中转、网关、网页客户端）             |
+| `run_demo.bat`                      | Windows 一键启动三个窗口的演示                           |
+| `.github/workflows/tests.yml`       | 推送到 GitHub 后自动运行端到端测试                       |
+| `deploy/`                           | VPS、树莓派/OpenWrt 部署文档与 systemd 单元              |
+| `docs/`                             | 界面截图                                                 |
+| `gateway_actions.log`               | 网关操作日志（请求号、动作、结果）                       |
 
 ## 快速开始
 
@@ -160,11 +160,11 @@ quit               退出
 
 对比其他方案：
 
-| 方案 | 原理 | 前提 | 本项目 |
-| --- | --- | --- | --- |
-| 端口映射 | 在路由器上把公网端口转发到内网主机 | 必须有公网 IP，运营商允许入站 | 不需要 |
+| 方案           | 原理                                     | 前提                                       | 本项目         |
+| -------------- | ---------------------------------------- | ------------------------------------------ | -------------- |
+| 端口映射       | 在路由器上把公网端口转发到内网主机       | 必须有公网 IP，运营商允许入站              | 不需要         |
 | UDP 打洞 / P2P | 双方同时向对方公网映射地址发包，尝试直连 | 双方 NAT 类型友好，对称 NAT / CGNAT 常失败 | 可作为后续优化 |
-| 中转反向连接 | 双方都连公网中转，由中转转发 | 一台有公网 IP 的中转服务器 | **已实现** |
+| 中转反向连接   | 双方都连公网中转，由中转转发             | 一台有公网 IP 的中转服务器                 | **已实现**     |
 
 因此，真正部署时唯一需要公网可达的是 `relay.py`（VPS），网关和家长端都可以在内网。演练时三端都在本机，效果等价。
 
@@ -172,47 +172,47 @@ quit               退出
 
 ### TCP 控制通道（JSON 行，端口 9000）
 
-| type | 方向 | 关键字段 | 说明 |
-| --- | --- | --- | --- |
-| `register` | 网关 → 中转 | `device_id` | 网关注册 |
-| `registered` | 中转 → 网关 | `device_id` | 注册确认 |
-| `parent` | 家长端 → 中转 | — | 家长端接入 |
-| `heartbeat` | 网关 → 中转 | `device_id` | 心跳，默认 10s 一次 |
-| `cmd` | 家长端 → 中转 → 网关 | `req_id`、`device_id`、`payload.action`、`payload.target` | 下发管控指令 |
-| `result` | 网关 → 中转 → 家长端 | `req_id`、`device_id`、`payload.ok`、`payload.msg`、`payload.action/target` | 执行回执 |
-| `state` | 网关 → 中转 → 家长端 | `payload.blocked`、`payload.mode` | 网关当前管控清单与运行模式 |
-| `list` | 家长端 → 中转 | — | 查询在线网关 |
-| `status` | 中转 → 家长端 | `gateways`、`devices`、`history` | 在线设备与记录 |
-| `event` | 中转 → 家长端 | `event`、`device_id`、`reason` | 网关上线/下线推送 |
+| type         | 方向                 | 关键字段                                                                    | 说明                       |
+| ------------ | -------------------- | --------------------------------------------------------------------------- | -------------------------- |
+| `register`   | 网关 → 中转          | `device_id`                                                                 | 网关注册                   |
+| `registered` | 中转 → 网关          | `device_id`                                                                 | 注册确认                   |
+| `parent`     | 家长端 → 中转        | —                                                                           | 家长端接入                 |
+| `heartbeat`  | 网关 → 中转          | `device_id`                                                                 | 心跳，默认 10s 一次        |
+| `cmd`        | 家长端 → 中转 → 网关 | `req_id`、`device_id`、`payload.action`、`payload.target`                   | 下发管控指令               |
+| `result`     | 网关 → 中转 → 家长端 | `req_id`、`device_id`、`payload.ok`、`payload.msg`、`payload.action/target` | 执行回执                   |
+| `state`      | 网关 → 中转 → 家长端 | `payload.blocked`、`payload.mode`                                           | 网关当前管控清单与运行模式 |
+| `list`       | 家长端 → 中转        | —                                                                           | 查询在线网关               |
+| `status`     | 中转 → 家长端        | `gateways`、`devices`、`history`                                            | 在线设备与记录             |
+| `event`      | 中转 → 家长端        | `event`、`device_id`、`reason`                                              | 网关上线/下线推送          |
 
 ### 网页 HTTP / SSE（端口 8080）
 
-| 方法与路径 | 说明 |
-| --- | --- |
-| `GET /` | 控制台页面（公开，登录逻辑在前端） |
-| `GET /api/status` | 在线设备、管控清单、历史记录（需令牌） |
-| `GET /api/history` | 执行记录（需令牌） |
-| `POST /api/command` | 下发指令，body：`{device_id, action, target, client_id}`（需令牌） |
-| `GET /api/events?token=...&client_id=...` | SSE 实时通道，推送 `hello/status/state/event/result` |
+| 方法与路径                                | 说明                                                               |
+| ----------------------------------------- | ------------------------------------------------------------------ |
+| `GET /`                                   | 控制台页面（公开，登录逻辑在前端）                                 |
+| `GET /api/status`                         | 在线设备、管控清单、历史记录（需令牌）                             |
+| `GET /api/history`                        | 执行记录（需令牌）                                                 |
+| `POST /api/command`                       | 下发指令，body：`{device_id, action, target, client_id}`（需令牌） |
+| `GET /api/events?token=...&client_id=...` | SSE 实时通道，推送 `hello/status/state/event/result`               |
 
 令牌通过 `X-Auth-Token` 请求头传递；SSE 由于浏览器的 `EventSource` 不能自定义请求头，改用查询参数。
 
 ## 配置项（环境变量）
 
-| 变量 | 默认值 | 说明 |
-| --- | --- | --- |
-| `RELAY_HOST` | `127.0.0.1` | 网关/家长端连接的中转地址（部署到 VPS 时改成公网 IP） |
-| `RELAY_BIND` | `0.0.0.0` | 中转 TCP 监听地址 |
-| `RELAY_PORT` | `9000` | 中转 TCP 端口 |
-| `DEVICE_ID` | `gw1` | 网关设备号 |
-| `TARGET_DEVICE` | `gw1` | 命令行家长端默认目标 |
-| `USE_REAL_IPTABLES` | `0` | 设为 `1` 且 root 运行时执行真实 iptables |
-| `HEARTBEAT_INTERVAL` | `10` | 网关心跳间隔（秒） |
-| `HEARTBEAT_TIMEOUT` | `30` | 中转判定网关掉线的超时（秒） |
-| `CMD_TIMEOUT` | `15` | 家长端等待回执的超时（秒） |
-| `WEB_BIND` | `0.0.0.0` | 网页控制台监听地址 |
-| `WEB_PORT` | `8080` | 网页控制台端口 |
-| `WEB_TOKEN` | `parent123` | 网页访问令牌（**正式部署务必修改**） |
+| 变量                 | 默认值      | 说明                                                  |
+| -------------------- | ----------- | ----------------------------------------------------- |
+| `RELAY_HOST`         | `127.0.0.1` | 网关/家长端连接的中转地址（部署到 VPS 时改成公网 IP） |
+| `RELAY_BIND`         | `0.0.0.0`   | 中转 TCP 监听地址                                     |
+| `RELAY_PORT`         | `9000`      | 中转 TCP 端口                                         |
+| `DEVICE_ID`          | `gw1`       | 网关设备号                                            |
+| `TARGET_DEVICE`      | `gw1`       | 命令行家长端默认目标                                  |
+| `USE_REAL_IPTABLES`  | `0`         | 设为 `1` 且 root 运行时执行真实 iptables              |
+| `HEARTBEAT_INTERVAL` | `10`        | 网关心跳间隔（秒）                                    |
+| `HEARTBEAT_TIMEOUT`  | `30`        | 中转判定网关掉线的超时（秒）                          |
+| `CMD_TIMEOUT`        | `15`        | 家长端等待回执的超时（秒）                            |
+| `WEB_BIND`           | `0.0.0.0`   | 网页控制台监听地址                                    |
+| `WEB_PORT`           | `8080`      | 网页控制台端口                                        |
+| `WEB_TOKEN`          | `parent123` | 网页访问令牌（**正式部署务必修改**）                  |
 
 ## 测试
 
@@ -223,20 +223,6 @@ python test_e2e.py
 自动验证 23 项：网关注册上线、阻断/解除、重复操作幂等、非法目标拒绝、离线网关报错、未授权连接拒绝、网页令牌 401、静态页与状态接口、SSE 欢迎消息、网页下发指令与实时回执、管制清单同步、执行记录查询、网页非法参数拒绝、心跳超时清理、上下线事件、在线列表更新。
 
 仓库已配置 GitHub Actions（`.github/workflows/tests.yml`），每次推送或提交 PR 都会在 Ubuntu + Python 3.12 上自动运行这套测试。
-
-## 发布到 GitHub
-
-先在 GitHub 新建一个**空仓库**（不要勾选自动生成 README），然后在项目目录执行：
-
-```bash
-git init -b main
-git add .
-git commit -m "计算机网络项目作业二：家庭网关远程管控"
-git remote add origin https://github.com/你的用户名/你的仓库名.git
-git push -u origin main
-```
-
-> 已配置 Git 的机器上可以直接执行；如果没有配置过，先设置 `git config --global user.name "名字"` 和 `git config --global user.email "邮箱"`。
 
 推送后 Actions 会自动跑一遍端到端测试，仓库页面的 Actions 标签可以看到结果。
 
