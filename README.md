@@ -59,7 +59,6 @@
 | `parent.py` | 命令行家长端 |
 | `demo_online.py` | 单进程演示入口：中转 + 模拟网关 + 网页控制台 |
 | `Dockerfile` / `docker-compose.yml` | 一条命令容器化运行 |
-| `render.yaml` | Render 免费在线演示配置 |
 | `test_e2e.py` | 端到端测试（自动拉起中转、网关、网页客户端） |
 | `run_demo.bat` | Windows 一键启动三个窗口的演示 |
 | `.github/workflows/tests.yml` | 推送到 GitHub 后自动运行端到端测试 |
@@ -225,9 +224,7 @@ python test_e2e.py
 
 仓库已配置 GitHub Actions（`.github/workflows/tests.yml`），每次推送或提交 PR 都会在 Ubuntu + Python 3.12 上自动运行这套测试。
 
-## 发布到 GitHub 与在线演示
-
-### 1. 推送到 GitHub
+## 发布到 GitHub
 
 先在 GitHub 新建一个**空仓库**（不要勾选自动生成 README），然后在项目目录执行：
 
@@ -242,29 +239,6 @@ git push -u origin main
 > 已配置 Git 的机器上可以直接执行；如果没有配置过，先设置 `git config --global user.name "名字"` 和 `git config --global user.email "邮箱"`。
 
 推送后 Actions 会自动跑一遍端到端测试，仓库页面的 Actions 标签可以看到结果。
-
-### 2. Render 免费在线演示（老师点链接即可）
-
-1. 打开 <https://render.com>，用 GitHub 账号注册/登录（免费）。
-2. 点击 **New → Blueprint**，选择刚推送的仓库；Render 会自动读取 `render.yaml`，确认后创建一个 Free 实例。
-3. 如果想手动创建：**New → Web Service** → 选择仓库 → Runtime 选 Python → Start Command 填 `python demo_online.py` → Instance Type 选 **Free** → 环境变量加 `WEB_TOKEN`。
-4. 部署完成后得到类似 `https://humiao-demo.onrender.com` 的地址，把它写进作业说明或 README。
-5. 打开链接，输入令牌 `parent123` 即可操作。
-
-注意事项：
-
-- 免费实例在 15 分钟无访问后会休眠，老师第一次打开可能需要等 **30–60 秒**唤醒，之后正常使用。
-- 在线演示运行的是 `demo_online.py`，网关是**模拟的**，不会真正阻断服务器流量；完整三端效果请本地运行或 Docker。
-- 正式给别人使用前，记得把 `render.yaml` 里的 `WEB_TOKEN`（或 Render 控制台的环境变量）从默认值改掉。
-- 不想用 Render 时，也可以把 `demo_online.py` 放到任意支持 Python Web 服务的免费平台（如 Hugging Face Spaces Docker 模式）。
-
-### 3. 老师本地查看（不依赖在线服务）
-
-- **Windows**：下载仓库 ZIP → 解压 → 双击 `run_demo.bat`，浏览器会自动打开。
-- **任意系统**：安装 Python 3.8+，执行 `python demo_online.py`。
-- **有 Docker**：执行 `docker compose up`。
-
-以上三种方式都无需安装第三方 Python 包。
 
 ## 设计要点
 
@@ -290,7 +264,6 @@ git push -u origin main
 
 - 通信为明文 TCP / HTTP，令牌只是课程演示级认证；公网部署应加 TLS（Caddy/Nginx 反代）并修改默认令牌。
 - 单台中转是单点，未做集群、消息持久化和限流；执行记录只保存在内存。
-- Render 免费在线演示实例会休眠，首次访问需等待唤醒；在线演示中的网关为模拟模式，不真正拦截服务器流量。
 - 域名阻断基于网关侧 DNS 解析结果，CDN 域名可能解析到多个或变化的 IP；按域名拦截（如 dnsmasq）更适合路由器生产环境。
 - 真实模式只阻断到目标 IP 的出站流量，且需要 Linux + root；Windows 默认走模拟模式。
 - 未实现定时管控、按 MAC 的设备级管控、应用识别等扩展功能，可作为后续方向。
